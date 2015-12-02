@@ -252,6 +252,8 @@ passport.use(new TwitterStrategy(secrets.twitter, function(req, accessToken, tok
  * Sign in with Google.
  */
 passport.use(new GoogleStrategy(secrets.google, function(req, accessToken, refreshToken, profile, done) {
+	console.log('passport access_token', accessToken);
+	console.log('passport refresh_token', refreshToken)
   if (req.user) {
     User.findOne({ google: profile.id }, function(err, existingUser) {
       if (existingUser) {
@@ -260,7 +262,7 @@ passport.use(new GoogleStrategy(secrets.google, function(req, accessToken, refre
       } else {
         User.findById(req.user.id, function(err, user) {
           user.google = profile.id;
-          user.tokens.push({ kind: 'google', accessToken: accessToken });
+          user.tokens.push({ kind: 'google', accessToken: accessToken, refreshToken: refreshToken });
           user.profile.name = user.profile.name || profile.displayName;
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || profile._json.image.url;
@@ -284,7 +286,7 @@ passport.use(new GoogleStrategy(secrets.google, function(req, accessToken, refre
           var user = new User();
           user.email = profile.emails[0].value;
           user.google = profile.id;
-          user.tokens.push({ kind: 'google', accessToken: accessToken });
+          user.tokens.push({ kind: 'google', accessToken: accessToken, refreshToken: refreshToken  });
           user.profile.name = profile.displayName;
           user.profile.gender = profile._json.gender;
           user.profile.picture = profile._json.image.url;

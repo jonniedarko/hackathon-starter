@@ -19,6 +19,7 @@ var lob;
 var ig;
 var Y;
 var request;
+var google;
 
 var _ = require('lodash');
 var async = require('async');
@@ -841,3 +842,53 @@ exports.postBitGo = function(req, res, next) {
     return res.redirect('/api/bitgo');
   }
 };
+// @todo https://github.com/theoephraim/node-google-spreadsheet/issues/38
+exports.getGoogleSheet = function (req, res, next){
+	var google = require('googleapis');
+	var token = _.find(req.user.tokens, { kind: 'google' });
+	console.log('token', JSON.stringify(token));
+	var client = new google.auth.OAuth2(secrets.google.clientID, secrets.google.clientSecret, secrets.google.callbackURL);
+	console.log('access_token', token.accessToken);
+	console.log('refresh_token', token.refreshToken)
+	client.setCredentials({
+	    access_token: token.accessToken,
+	    refresh_token: token.refreshToken
+	});
+	var Sheets = require('google-spreadsheets');
+
+	Sheets({
+	    key: '1ftwXj5BtfgbIygdT1ycUUX1R2aqGvRZZ6nT8f85DU28',
+	    auth: client
+	}, function(err, spreadsheet) {
+		if(err){
+          req.flash('errors', { msg: err.message });
+          return res.redirect('/api');
+        }
+		return res.render('api/google/sheet', {
+		  title: 'Google Sheets',
+		  rows: [[1,2,3,4], ['A', 'B', 'C', 'D']]
+		})
+	    /*spreadsheet.worksheets[0].cells({
+	        range: 'R3A1:R9E9'
+	    }, function(err, cells) {
+	        // Cells will contain a 2 dimensional array with all cell data in the
+	        // range requested.
+	         if(err){
+	          req.flash('errors', { msg: err.message });
+	          return res.redirect('/home');
+	        }
+			req.flash('info', { msg: 'cells: ' + cells.length });
+	        return res.render('api/google/sheet', {
+		      title: 'Instagram API',
+		      rows: results.searchByUsername
+		    });
+	    });*/
+	});
+	/*return res.render('api/google/sheet', {
+	  title: 'Google Sheets',
+	  rows: [[1,2,3,4], ['A', 'B', 'C', 'D']]
+	});*/
+
+
+
+}

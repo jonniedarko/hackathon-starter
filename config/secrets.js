@@ -29,7 +29,7 @@ module.exports = {
     user: process.env.MAILGUN_USER || 'postmaster@sandbox697fcddc09814c6b83718b9fd5d4e5dc.mailgun.org',
     password: process.env.MAILGUN_PASSWORD || '29eldds1uri6'
   },
-  
+
   mandrill: {
     user: process.env.MANDRILL_USER || 'hackathonstarterdemo',
     password: process.env.MANDRILL_PASSWORD || 'E1K950_ydLR4mHw12a0ldA'
@@ -78,8 +78,10 @@ module.exports = {
   },
 
   google: {
-    clientID: process.env.GOOGLE_ID || '828110519058.apps.googleusercontent.com',
-    clientSecret: process.env.GOOGLE_SECRET || 'JdZsIaWhUFIchmC1a_IZzOHb',
+    clientID: process.env.GOOGLE_ID || '27171395493-gb7o9gi379uhj6lta4rku0ho5kj6cshk.apps.googleusercontent.com',
+    clientSecret: process.env.GOOGLE_SECRET || '75kA1bbUeEhH81dispE-GPQ-',
+	accessType: process.env.GOOGLE_ACCESS_TYPE || 'offline',
+	approval_prompt: 'force',
     callbackURL: '/auth/google/callback',
     passReqToCallback: true
   },
